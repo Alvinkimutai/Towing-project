@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
@@ -39,8 +39,18 @@ def create_user():
 # Get all users
 @app.route('/users', methods=['GET'])
 def get_users():
+    allUsers = []
     users = User.query.all()
-    return jsonify([user.email for user in users]), 200
+    for user in users:
+       users_json = {
+           "id": user.id,
+           "email": user.email,
+           "created_at": user.created_at,
+           "updated_at": user.updated_at
+       }
+       allUsers.append(users_json)
+    
+    return make_response(jsonify(allUsers), 200)
 
 # Get a user by ID
 @app.route('/users/<user_id>', methods=['GET'])
@@ -212,4 +222,13 @@ def create_chat():
     db.session.commit()
     return jsonify({"message": "Chat created", "chat_id": new_chat.id}), 201
 
-# Get all chats for
+# Get all chats for a user and garage
+@app.route('/chats/user/<user_id>/garage/<garage_id>', methods=['GET'])
+def get_chats(user_id, garage_id):
+    user_chats = UserChat.query.filter_by(user_id=user_id, garage_id=garage_id).all()
+    return jsonify([{"chat_id": chat.chat_id, "message": chat.chats.message} for chat in user_chats]), 200
+
+
+# Start the Flask app
+if __name__ == "__main__":
+    app.run(port=5555, debug=True)

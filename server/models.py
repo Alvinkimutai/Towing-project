@@ -32,7 +32,7 @@ class ReviewTypeEnum(Enum):
 # User Model
 class User(db.Model):
     __tablename__ = 'users'
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -50,24 +50,24 @@ class User(db.Model):
 # Role Model
 class Role(db.Model):
     __tablename__ = 'roles'
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    name = db.Column(db.String(100), nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(80), unique=True, nullable=False)
 
 
 # UserRoles Association Table
 class UserRoles(db.Model):
     __tablename__ = 'user_roles'
-    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), primary_key=True)
-    role_id = db.Column(db.String(36), db.ForeignKey('roles.id'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), primary_key=True)
 
 
 # Profile Model
 class Profile(db.Model):
     __tablename__ = 'profile'
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
-    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     location = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -76,11 +76,11 @@ class Profile(db.Model):
 # Vehicle Model
 class Vehicle(db.Model):
     __tablename__ = 'vehicle'
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id =  db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     model = db.Column(db.String(100), nullable=False)
     registration = db.Column(db.String(100), nullable=False)
-    user_id = db.Column(db.String(36), db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     photo_url = db.Column(db.String(255))
     engine = db.Column(db.String(100))
     transmission = db.Column(db.Enum(TransmissionEnum))
@@ -92,9 +92,9 @@ class Vehicle(db.Model):
 # Vehicle Features Model
 class VehicleFeature(db.Model):
     __tablename__ = 'vehicle_features'
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True) 
     feature = db.Column(db.String(100), nullable=False)
-    vehicle_id = db.Column(db.String(36), db.ForeignKey('vehicle.id'))
+    vehicle_id = db.Column(db.Integer, db.ForeignKey('vehicle.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -102,12 +102,12 @@ class VehicleFeature(db.Model):
 # Garage Model
 class Garage(db.Model):
     __tablename__ = 'garage'
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     location = db.Column(db.String(255), nullable=False)
     contact = db.Column(db.String(100))
     email = db.Column(db.String(100))
-    user_id = db.Column(db.String(36), db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     description = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -120,18 +120,18 @@ class Garage(db.Model):
 # Products Model
 class Product(db.Model):
     __tablename__ = 'products'
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
-    garage_id = db.Column(db.String(36), db.ForeignKey('garage.id'))
+    garage_id = db.Column(db.Integer, db.ForeignKey('garage.id'))
 
 
 # Garage Services Model
 class GarageService(db.Model):
     __tablename__ = 'garage_services'
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     service = db.Column(db.String(100), nullable=False)
     service_type = db.Column(db.Enum(ServiceEnum))
-    garage_id = db.Column(db.String(36), db.ForeignKey('garage.id'))
+    garage_id = db.Column(db.Integer, db.ForeignKey('garage.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -139,9 +139,9 @@ class GarageService(db.Model):
 # Service Details Model
 class ServiceDetail(db.Model):
     __tablename__ = 'service_detail'
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     detail = db.Column(db.Text, nullable=False)
-    service_id = db.Column(db.String(36), db.ForeignKey('garage_services.id'))
+    service_id = db.Column(db.Integer, db.ForeignKey('garage_services.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -149,10 +149,10 @@ class ServiceDetail(db.Model):
 # Service Pricing Model
 class ServicePricing(db.Model):
     __tablename__ = 'service_pricing'
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     amount = db.Column(db.Float, nullable=False)
     detail = db.Column(db.String(255))
-    service_id = db.Column(db.String(36), db.ForeignKey('garage_services.id'))
+    service_id = db.Column(db.Integer, db.ForeignKey('garage_services.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -160,9 +160,9 @@ class ServicePricing(db.Model):
 # Payments Model
 class Payment(db.Model):
     __tablename__ = 'payment'
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    service_id = db.Column(db.String(36), db.ForeignKey('garage_services.id'))
-    user_id = db.Column(db.String(36), db.ForeignKey('users.id'))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    service_id = db.Column(db.Integer, db.ForeignKey('garage_services.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -170,29 +170,34 @@ class Payment(db.Model):
 # Review Model
 class Review(db.Model):
     __tablename__ = 'review'
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True) 
     review = db.Column(db.Text, nullable=False)
-    service_id = db.Column(db.String(36), db.ForeignKey('garage_services.id'))
-    user_id = db.Column(db.String(36), db.ForeignKey('users.id'))
+    service_id = db.Column(db.Integer, db.ForeignKey('garage_services.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     review_type = db.Column(db.Enum(ReviewTypeEnum))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
-# User Chats Model
-class UserChat(db.Model):
-    __tablename__ = 'user_chats'
-    chat_id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = db.Column(db.String(36), db.ForeignKey('users.id'))
-    garage_id = db.Column(db.String(36), db.ForeignKey('garage.id'))
-
-
-# Chats Model
 class Chat(db.Model):
     __tablename__ = 'chats'
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     message = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    user_chats = db.relationship('UserChat', backref='chat', lazy=True)
+    # Define the relationship between Chat and UserChat with foreign key
+    user_chats = db.relationship(
+        'UserChat', 
+        backref='chat', 
+        lazy=True,
+        foreign_keys="UserChat.chat_id"  # Explicitly define the foreign key relationship
+    )
+
+
+# User Chats Model
+class UserChat(db.Model):
+    __tablename__ = 'user_chats'
+    chat_id = db.Column(db.Integer, db.ForeignKey('chats.id'), primary_key=True)  # Foreign key to Chat
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    garage_id = db.Column(db.Integer, db.ForeignKey('garage.id'))
