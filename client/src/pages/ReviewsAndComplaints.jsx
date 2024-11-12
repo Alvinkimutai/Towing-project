@@ -4,30 +4,30 @@ import { setDashTab } from '../store/slices/dashtabSlice'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 
-const AllUsers = () => {
-  const [reviewComplaints, setRevCom] = useState(null)
+const AllReviews = () => {
+  const [reviews, setRevCom] = useState(null)
   const [loading, setLoading] = useState(true)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   const fetchAllRevCom = async () => {
     setLoading(true)
-    const res = await fetch('/api/users')
+    const res = await fetch('/api/reviews')
     const data = await res.json()
     setLoading(false)
     if (res.ok) {
-      setUsers(data)
+      setRevCom(data)
     } else {
       console.log('Error Fetching data')
     }
   }
   useEffect(() => {
-    fetchAllUsers()
+    fetchAllRevCom()
   }, [])
 
-  const deleteUser = async (id) => {
+  const deleteReview = async (id) => {
     try {
-      const response = await fetch(`/users/${id}`, {
+      const response = await fetch(`/reviews/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: 'Bearer ' + Cookies.get('access_token'),
@@ -53,44 +53,52 @@ const AllUsers = () => {
         ) : (
           <div className="overflow-x-auto">
             <div className="flex items-center justify-between mb-2">
-              <h1 className="my-2 text-2xl ml-2">All Users</h1>
-              <button
-                onClick={() => dispatch(setDashTab('newuser'))}
-                className="mr-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              >
-                New User
-              </button>
+              <h1 className="my-2 text-2xl ml-2">All Reviews</h1>
+              
             </div>
-            {users && users.length > 0 ? (
+            {reviews && reviews.length > 0 ? (
               <table className="min-w-full bg-white border border-gray-200">
                 <thead>
                   <tr className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-                    <th className="py-3 px-6 text-left">User ID</th>
-                    <th className="py-3 px-6 text-left">Email</th>
-                    <th className="py-3 px-6 text-left">created_at</th>
-                    <th className="py-3 px-6 text-left">updated_at</th>
-                    <th className="py-3 px-6 text-left">Actions</th>
+                    <th className="py-3 px-6 text-left">id</th>
+                    <th className="py-3 px-6 text-left">Review</th>
+                    <th className="py-3 px-6 text-left">service_id</th>
+                    <th className="py-3 px-6 text-left">user_id</th>
+                    <th className="py-3 px-6 text-left">review_type</th>
+                    <th className="py-3 px-6 text-left">created-at</th>
+                    <th className="py-3 px-6 text-left">updated-at</th>
                   </tr>
                 </thead>
                 <tbody className="text-black font-light">
-                  {users.map((user) => (
+                  {reviews.map((review) => (
                     <tr
-                      key={user.user_id}
+                      key={review.review_id}
                       className="border-b border-gray-200 hover:bg-gray-100 cursor-pointer"
                       onClick={() =>
-                        navigate(`/user/${user.user_id}`)
+                        navigate(`/review/${review.review}`)
                       }
                     >
                       <td className="py-3 px-6 text-left">
-                        {user?.id}
+                        {review?.id}
                       </td>
                       <td className="py-3 px-6 text-left">
-                        {user?.email}
+                        {review?.review}
                       </td>
                       <td className="py-3 px-6 text-left">
-                        {user?.created_at}
+                        {review?.service_id}
                       </td>
-                      <td className="py-3 px-6 text-left">{user?.updated_at || 'N/A'}</td>
+                      <td className="py-3 px-6 text-left">
+                        {review?.user_id}
+                      </td>
+                      <td className="py-3 px-6 text-left">
+                        {review?.review_type}
+                        </td>
+                      <td className="py-3 px-6 text-left">
+                        {review?.created_at}
+                      </td>
+                      <td className="py-3 px-6 text-left">
+                        {review?.updated_at}
+                      </td>
                                        
                       <td
                         className="py-3 px-6 text-left"
@@ -102,7 +110,7 @@ const AllUsers = () => {
                           className="text-sm p-2 bg-red-600 rounded-md text-white font-bold"
                           onClick={(e) => {
                             e.stopPropagation()
-                            deleteUser(user.user_id)
+                            deleteUser(review.id)
                           }}
                         >
                           Delete
@@ -113,7 +121,7 @@ const AllUsers = () => {
                 </tbody>
               </table>
             ) : (
-              <p className="text-center text-gray-500">No users found.</p>
+              <p className="text-center text-gray-500">No reviews found.</p>
             )}
           </div>
         )}
@@ -122,4 +130,4 @@ const AllUsers = () => {
   )
 }
 
-export default AllUsers
+export default AllReviews

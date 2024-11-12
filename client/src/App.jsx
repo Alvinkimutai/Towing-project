@@ -10,7 +10,7 @@ import './index.css'; // Tailwind CSS
 const App = () => {
   return (
     <ErrorBoundary>
-      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <Router>
         <div className="min-h-screen bg-gray-100">
           <Routes>
             {/* Landing Page Route */}
@@ -24,6 +24,9 @@ const App = () => {
 
             {/* Mechanic Dashboard Route */}
             <Route path="/mechanic-dashboard" element={<MechanicDashboard />} />
+
+            {/* Optional: Catch-all for 404 errors */}
+            <Route path="*" element={<h1>404 - Page Not Found</h1>} />
           </Routes>
         </div>
       </Router>

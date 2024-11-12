@@ -201,3 +201,6 @@ class UserChat(db.Model):
     chat_id = db.Column(db.Integer, db.ForeignKey('chats.id'), primary_key=True)  # Foreign key to Chat
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     garage_id = db.Column(db.Integer, db.ForeignKey('garage.id'))
+
+class UserRequest(db.Model):
+    __tablename__= ''

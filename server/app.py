@@ -52,6 +52,26 @@ def get_users():
     
     return make_response(jsonify(allUsers), 200)
 
+# Get all reviews
+
+@app.route('/reviews', methods=['GET'])
+def get_reviews():
+    allReviews = []
+    reviews = Review.query.all()
+    for review  in reviews:
+       review_json = {
+           "id": review.id,
+           "review": review.review,
+           "service_id":review.service_id,
+           "user_id":review.user_id,
+           "review_type": review.review_type.name,
+           "created_at": review.created_at,
+           "updated_at": review.updated_at
+       }
+       allReviews.append(review_json)
+    
+    return make_response(jsonify(allReviews), 200)
+
 # Get a user by ID
 @app.route('/users/<user_id>', methods=['GET'])
 def get_user(user_id):
